@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Hey Love</title>
+  <style>
+    /* Page setup */
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+    }
+    body {
+      background: url('https://i.pinimg.com/1200x/69/bf/99/69bf9904ed8e73f973ccd33c6133e602.jpg')
+        no-repeat center center fixed;
+      background-size: cover;
+      display: flex; flex-direction: column; align-items: center;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      margin-top: 30px;
+      color: #ff4da6;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      font-size: 1.8rem;
+    }
+
+    /* Envelope */
+    #envelope-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 130px;
+    }
+    #envelope {
+      width: 150px; height: 150px;
+      background: url('pink.png') no-repeat center/contain;
+      cursor: pointer;
+      animation: bumpGlow 2s infinite ease-in-out;
+    }
+    @keyframes bumpGlow {
+      0%,100% { transform: scale(1); box-shadow: 0 0 15px rgba(255,150,200,0.4); }
+      50%    { transform: scale(1.08); box-shadow: 0 0 30px rgba(255,100,180,0.7); }
+    }
+
+    /* Letter box */
+    #letter-box {
+      display: none;
+      position: absolute; top:150px; left:50%; transform: translateX(-50%);
+      width: 85vw; max-width:360px; padding: 20px;
+      background: rgba(255,230,240,0.95); border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      animation: fadeInMorph 0.6s ease-out forwards;
+    }
+    @keyframes fadeInMorph {
+      from { transform: translate(-50%,20px) scale(0.8); opacity:0; }
+      to   { transform: translate(-50%,0)    scale(1);   opacity:1; }
+    }
+    #letter-content {
+      max-height: 400px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      font-style: italic;
+      color: #4a001f;
+      margin-bottom: 10px;
+      padding-right: 10px;
+      box-sizing: border-box;
+      overflow-wrap: anywhere;
+    }
+    #letter-content::-webkit-scrollbar {
+      width:6px;
+    }
+    #letter-content::-webkit-scrollbar-thumb {
+      background: rgba(255,100,180,0.6);
+      border-radius:3px;
+    }
+
+    /* Gift box */
+    #gift-container {
+      display: none;
+      margin: 0 auto 20px;
+      width: 130px; height: 130px;
+      cursor: pointer; position: relative;
+      animation: bumpGlow 2s infinite ease-in-out;
+    }
+    #gift-image {
+      width: 100%; height: auto;
+      animation: bumpGlow 2s infinite ease-in-out;
+    }
+    #gift-container.open #gift-image {
+      transform: scale(1.05) rotate(-2deg);
+      animation: popOpen 0.4s ease forwards;
+    }
+    @keyframes popOpen {
+      from { transform: scale(1) rotate(0); }
+      50% { transform: scale(1.1) rotate(2deg); }
+      to   { transform: scale(1.05) rotate(-2deg); }
+    }
+
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed; top:0; left:0;
+      width:100vw; height:100vh;
+      pointer-events:none; z-index:9999;
+    }
+
+    /* Scratch container */
+    #scratch-container {
+      display: none;
+      position: fixed; top:50%; left:50%;
+      transform: translate(-50%,-50%);
+      width:300px; height:300px;
+      z-index:10000;
+    }
+
+    #counter {
+      position: absolute; bottom:-40px; left:50%;
+      transform: translateX(-50%);
+      color:#fff; font-size:1.2rem; font-weight:bold;
+      background:rgba(0,0,0,0.5);
+      padding:5px 10px; border-radius:10px;
+      z-index:10002;
+    }
+    #popup {
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      background:pink; color:#4a001f;
+      padding:20px 30px; border-radius:16px;
+      font-weight:bold; font-size:1.2rem;
+      box-shadow:0 0 15px rgba(255,100,180,0.6);
+      animation:popupFadeIn 0.8s ease-out forwards;
+      z-index:10001;
+    }
+    @keyframes popupFadeIn {
+      from { transform:translate(-50%,-60%) scale(0.8); opacity:0; }
+      to   { transform:translate(-50%,-50%) scale(1);   opacity:1; }
+    }
+    @keyframes popupFadeOut {
+      from { transform:translate(-50%,-50%) scale(1); opacity:1; }
+      to   { transform:translate(-50%,-60%) scale(0.8); opacity:0; }
+    }
+    @keyframes blackFadeOut {
+      from { opacity:1; }
+      to   { opacity:0; }
+    }
+
+    /* Hidden secret image */
+    #hidden-image {
+      position:absolute; top:0; left:0;
+      width:100%; height:100%;
+      object-fit:cover; border-radius:10px;
+      opacity:0; filter:brightness(0);
+      transition:opacity 1s ease, filter 1s ease;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    /* Heart pop */
+    #heart-pop {
+      position:fixed; top:50%; left:50%;
+      transform:translate(-50%,-50%) scale(0);
+      font-size:60px; opacity:0;
+      z-index:10003; pointer-events:none;
+    }
+    @keyframes heartPop {
+      0%   { transform:translate(-50%,-50%) scale(0.3); opacity:0; }
+      30%  { transform:translate(-50%,-50%) scale(1.2); opacity:1; }
+      60%  { transform:translate(-50%,-50%) scale(1);   opacity:1; }
+      100% { transform:translate(-50%,-50%) scale(1);   opacity:0; }
+    }
+
+    #overlay-gift {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.3);
+  width: 950px; /* base width */
+  opacity: 1;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  z-index: 10000;
+  visibility: hidden;
+}
+
+#romantic-title {
+  font-size: 1.34rem;
+  color: #ff85b3;
+  text-shadow: 0 0 10px #ff99c8, 0 0 20px #ffc0cb;
+  animation: heartbeat 1.5s infinite ease-in-out;
+  font-family: 'Script', cursive;
+  margin-top: 30px;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
+}
+
+.floating-hearts {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  animation: floatHearts 5s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes floatHearts {
+  0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(-40px); opacity: 0; }
+}
+
+#romantic-title {
+  font-size: 1.8rem;
+  color: #ff00dd;
+  padding: 5px 5px;
+  background: linear-gradient(145deg, #f8fc03, #85ee70);
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(41, 209, 19, 0.4),
+              inset 0 2px 8px rgba(255, 255, 255, 0.6);
+  font-family: 'Dancing Script', cursive;
+  text-align: center;
+  animation: gentlePulse 2.5s ease-in-out infinite;
+  margin-top: 30px;
+  max-width: 80%;
+}
+
+@keyframes gentlePulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.03); }
+}
+
+  </style>
+</head>
+<body>
+  <div class="floating-hearts">
+  ❤️ 💕 💖 💗 💘 
+</div>
+
+  <h1 id="romantic-title">Hey Love, I made this just for you</h1>
+  <div id="envelope-container">
+    <div id="envelope" aria-label="Open Love Letter" role="button"></div>
+  </div>
+
+  <div id="letter-box">
+    <div id="letter-content">
+      <p style="text-align:center;"><strong>My Dearest pulchritudinous gf,</strong></p>
+      <p style="text-align:center;">``````````````````````````````````````````````````````````</p>
+
+        <p style="text-align:center;">Writing this on June 6, 2025. this day was very hard for us due to miscommunication. I really hope by the time you were reading this letter, we have already made up. or make up? Pero I really hope my efforts this whole week, just to make you feel special, are not in vain. I know problems within relatonships are common especially for us but i really hope you know that, no matter what happens between us I will alsways be you biggest supporter and will be there for you all the time.</p>
+
+  <p style="text-align:center;">Tbh i was very scared when you sent me that tiktok video. That day, my love was the day I really thought about you in a deeper level. In the past i have always thought that "I really love and needed this girl" but baby yesterday was when i realised that I not only cant live without you, but I also dont want to live without you. Thank you for helping me to become a better person. I dont know what i did to get so lucky that you became my gf. But i really wish after all the problems and miscommunications, we would still pick "us"</p>
+
+  <p style="text-align:center;">My Love, i was honestly scared that i was not pleasing you in our relationship. You wanted so many simple things, but I still struggle to give them.. Thats why I decided to show my love and appreciation little by little. Step by step even if no one will notice. For I do believe that we have outstanding patience on each other. And have our whole lifetime for me to finally become your perfect bf. I really hope you would understand that I constantly try to communicate and talk to you and will keep on chatting you until I feel like we are settled.</p>
+
+  <p style="text-align:center;">My love, i know loving me is often hard. I know that I am not affectionate enough to define how much i love and care about you, which may often times lead of you feeling that kinakahiya lang kita. And tbh it really hurts that i cant give you the love you deserved and needed. I know my efforts are not enough. I know that the "improvements" im talking about is unrecognizable. But baby, i really love you, I just dont know how to express it. Ive never really been good at telling and sharing my own feelings. But you made me try.</p>
+
+  <p style="text-align:center;">A little backstory. I would always text my biological parents "I love you" every day, even though they're far away. Maybe that's why I'm okay with not seeing them, or even you, in person, because I've gotten used to loving from a distance. All I had were their pictures growing up. Please don’t take this the wrong way, my love. If loving like this seems wrong, or if it makes me a pathetic boyfriend for being okay with the distance, I understand, I will learn and strivefor the best result for you. But I truly love you. And as summer break goes on, I find myself missing you more and more each day. Tbh i really feel bad and will cry when i made a mistake. Especially when its about you.</p>
+
+<p style="text-align:center;">Im probobly the most oa one in this relationship. I get angry very easily irl and will always cry from stupid things. But my Love, you made me realised i was not alone. many people have the same exeprience like me. Like you. But baybe the moment I accepted you, was the moment i realised I am not alone, because of you. Thats why if you are ever in any hardships. Im always here. supporting and helping you whatever I can.</p>
+
+  <p style="text-align:center;">But im not writing this letter to vent on you. im here to tell you how I appreciate you very much. Im not really good at talking hence I created this letter. I wanna show you how I wanna love you so much, that you dont wanna find it on another boy again. Im sorry for being selfish.</p>
+
+  <p style="text-align:center;">Baby everytime gakasuko ka and wala kay energy mag chat. I really appreciate doing your best. Para lang dili magpadugay ang argument nato. I really appreciate how you always wanna listen. But im not sure if you even read those big and long paragraph full of bullshit. My love im sorry for hurting you if ever. I dont mean it. Im just probaly insecure and scared. But im trying to be better, For you.</p>
+
+  <p style="text-align:center;">Baby, I really hate it when your feeling insecure about ur body. I just dont get it. Majority of females in the whole world would die to have that shape of yours. My love, you are beautiful inside and outside. And it honestly shows. My Love, often times i feel like my words are meaningless since you dont believe them. But i love you, even you without make up on. Or even, you being a soft girl typa shi or some gangsta typa day. Baby, im in support of whatever you will do, as long as it will not harm yourself. I will always be by your side.</p>
+
+  <p style="text-align:center;">Im sorry, im not the same as the other bf's, I probobly can't do the things you find cute. But whenever you feel like it. Please tell me, cuz even if i prolly can't do it. I still wanna try it. With my precious gf, you. I wanna try my Best for you. And if it looks like im not loving you enough, then i will try my all to love you more than how much i love you before. I hope we can communicat at each other more effectively. I want the best of you. Good luck Nicole and i love you my love. Nice name btw. </p>
+
+  <p style="text-align:center;">This letter is one of the ways I show love—please accept it… Please read it. Please love it. No matter how small. And if I did it right, I hope it will execute properly.</p>
+  
+  <p style="text-align:center;"> Please excuse any of any of my chatgpt like words. I did not use AI for this letter. This is all within my heart. If I were to be honest, the only time i would use these words are when its feeling overwhelming and i have to compose myself somehow. Please excuse me and my words in the future.</p>
+  
+  <p style="text-align:center;"> [Ended on June 9,2025] -Still in love with you.</p>
+  
+  <p style="text-align:center;"><strong>By your number one supporter (or lover),<br/>Hun, Diaz</strong></p>
+    
+  <div id="gift-container" title="Click to open gift">
+      <img id="gift-image" src="yellowgift.png" alt="Gift" />
+    </div>
+  </div>
+
+<div id="scratch-container">
+  <!-- Gift overlay instead of black block -->
+  <img id="overlay-gift" src="yellowgift.png" alt="Overlay Gift" />
+  <div id="popup">Click your gift, and touch it.😋😋😋</div>
+  <div id="counter">100</div>
+  <img id="hidden-image" src="capygift.png" alt="Secret" />
+</div>
+
+
+  <div id="heart-pop">❤️</div>
+  <canvas id="confetti-canvas"></canvas>
+
+  <script>
+
+    let counter = 100;
+
+    // Element refs
+    const envelope     = document.getElementById('envelope');
+    const letterBox    = document.getElementById('letter-box');
+    const giftContainer= document.getElementById('gift-container');
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const overlayGift = document.getElementById('overlay-gift');
+    const counterText  = document.getElementById('counter');
+    const popup        = document.getElementById('popup');
+    const heart        = document.getElementById('heart-pop');
+    const surpriseImg  = document.getElementById('hidden-image');
+
+envelope.onclick = () => {
+  envelope.style.display = 'none';
+  letterBox.style.display = 'block';
+
+  // Play background music
+  const music = document.getElementById('bg-music');
+  music.play().catch(err => {
+    console.log("Autoplay blocked or error:", err);
+  });
+
+  setTimeout(() => {
+    giftContainer.style.display = 'block';
+  }, 500);
+};
+
+
+giftContainer.onclick = () => {
+  if (giftContainer.classList.contains('open')) return;
+  giftContainer.classList.add('open');
+
+  // hide the old gift immediately
+  giftContainer.style.display = 'none';
+  // —or completely remove it from the DOM—
+  // giftContainer.remove();
+
+  setTimeout(() => {
+    startConfetti();
+    document.getElementById('scratch-container').style.display = 'block';
+    overlayGift.style.visibility = 'visible';
+  }, 700);
+};
+
+
+
+    // Confetti 🎉
+    function startConfetti() {
+      const ctx = confettiCanvas.getContext('2d');
+      confettiCanvas.width = innerWidth;
+      confettiCanvas.height= innerHeight;
+      confettiCanvas.style.display = 'block';
+
+      const pieces = Array.from({length:80}).map(() => ({
+        x: Math.random()*innerWidth,
+        y: -Math.random()*innerHeight,
+        r: 4 + Math.random()*6,
+        c: ['#ff4da6','#ffd1e6','#fff'][Math.floor(Math.random()*3)],
+        s: 2 + Math.random()*3
+      }));
+      let anim = true;
+      function run() {
+        if (!anim) return;
+        ctx.clearRect(0,0,innerWidth,innerHeight);
+        pieces.forEach(p => {
+          p.y += p.s;
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fillStyle = p.c;
+          ctx.fill();
+        });
+        requestAnimationFrame(run);
+      }
+      run();
+      setTimeout(() => {
+        anim = false;
+        confettiCanvas.style.display = 'none';
+      }, 4000);
+    }
+
+
+    // Prevent page scrolling when over letter
+    document.getElementById('letter-box')
+      .addEventListener('wheel', e => e.stopPropagation());
+    document.getElementById('letter-box')
+      .addEventListener('touchmove', e => e.stopPropagation());
+  
+overlayGift.onclick = () => {
+  if (counter <= 0) return;
+  counter--;
+  counterText.textContent = counter;
+
+  // grow and fade the overlay
+  const scale = 0.3 + (100 - counter) * (0.9 / 100);
+  overlayGift.style.transform = `translate(-50%, -50%) scale(${scale.toFixed(2)})`;
+  overlayGift.style.opacity = (counter / 100).toFixed(2);
+
+  if (counter === 0) {
+    // 1) prepare to hide the popup when its fade-out ends
+    popup.addEventListener('animationend', () => {
+      popup.style.display = 'none';
+    }, { once: true });
+    // fallback: hide after 700ms even if animationend misses
+    setTimeout(() => popup.style.display = 'none', 100);
+
+    // 2) now trigger fade-out animations
+    popup.style.animation       = 'popupFadeOut 0.6s ease forwards';
+    overlayGift.style.animation = 'blackFadeOut 1s ease forwards';
+
+    // 3) after cover fade-out, clean up overlay and show secret + heart
+    setTimeout(() => {
+      overlayGift.style.display = 'none';
+      counterText.style.display = 'none';
+      surpriseImg.style.opacity = '1';
+      surpriseImg.style.filter  = 'brightness(1)';
+      heart.style.animation     = 'heartPop 1.4s ease forwards';
+    }, 1000);
+  }
+};
+  </script>
+
+<audio id="bg-music" loop>
+  <source src="hopeful-love-romantic-music-331770.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+</body>
+</html>

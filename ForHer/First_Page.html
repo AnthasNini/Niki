@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1, minimum-scale=1" />
+  <title>Secret MLBB Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Pacifico', cursive;
+      background: url('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2F1200x%2F69%2Fbf%2F99%2F69bf9904ed8e73f973ccd33c6133e602.jpg&f=1&nofb=1&ipt=b8e362ea8da7e8c809ffa41434415802590a9a6e3466c8b1bd38dee488371d71') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 75%;
+      max-width: 300px;
+      background: rgba(255, 255, 204, 0.9);
+      border-radius: 20px;
+      padding: 20px 15px;
+      text-align: center;
+      box-shadow: 0 0 25px 5px gold;
+      animation: fadeInZoom 1.5s ease-out;
+      position: relative;
+      margin-bottom: 60px;
+    }
+
+    @keyframes fadeInZoom {
+      0% { opacity: 0; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .gif {
+      width: 100%;
+      max-height: 250px;
+      object-fit: contain;
+      border-radius: 15px;
+      animation: fadeInZoom 1.5s ease-out;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: calc(100% - 20px);
+      margin-top: 15px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+      box-shadow: 0 0 12px gold;
+      background-color: #fffaf0;
+      animation: fadeInZoom 1.5s ease-out;
+    }
+
+    .enter-btn {
+      margin-top: 15px;
+      padding: 12px 25px;
+      font-size: 18px;
+      background-color: yellow;
+      color: black;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 0 20px gold;
+      position: relative;
+      animation: fadeInZoom 1.5s ease-out;
+    }
+
+    .sunflower {
+      width: 35px;
+      position: absolute;
+      top: -20px;
+      left: -20px;
+    }
+
+       .flower-large {
+  position: absolute;
+  top: -35px;
+  right: -26px;
+  width: 35%;            /* change this to make it bigger or smaller */
+  opacity: 0.8;
+  transform: rotate(26deg);  /* scaleX(-1) flips it horizontally */
+  animation: fadeInZoom 1.5s ease-out;
+}
+
+    .countdown {
+      margin-top: 15px;
+      color: #d48b00;
+      font-size: 16px;
+      font-weight: bold;
+      animation: fadeInZoom 1.5s ease-out;
+    }
+
+    .modal-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .modal {
+      background: #fff8dc;
+      border: 2px solid #FFD700;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+      padding: 15px 20px;
+      text-align: center;
+      max-width: 280px;
+      width: 80%;
+      position: relative;
+      animation: zoomIn 0.5s ease-out;
+    }
+
+    .modal img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .modal p {
+      margin: 0;
+      font-size: 16px;
+      color: #444;
+    }
+
+    @keyframes zoomIn {
+      0% { opacity: 0; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+
+
+.footer-container {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.footer-wrapper {
+  position: fixed;
+  bottom: -36px; /* 👈 Change this value to move the image */
+  left: 0;
+  width: 100%;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+  background: transparent;
+}
+
+
+.footer-flower {
+  height: 100%; /* 👈 Ensures it fills the wrapper height */
+  object-fit: contain;
+}
+
+.footer-text {
+  position: absolute;
+  bottom: 45px; /* 👈 Adjust this manually to place text where you want */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  font-weight: bold;
+  color: #002aff;
+  text-shadow: 1px 1px 2px white;
+  animation: rgbColor 3s linear infinite;
+  pointer-events: none;
+}
+
+
+
+
+@keyframes floatBouquet {
+  0%   { transform: translateX(-50%) translateY(0); }
+  100% { transform: translateX(-50%) translateY(-10px); }
+}
+
+
+    @keyframes rgbColor {
+      0% { color: red; }
+      14% { color: orange; }
+      28% { color: yellow; }
+      42% { color: green; }
+      56% { color: blue; }
+      70% { color: indigo; }
+      84% { color: violet; }
+      100% { color: red; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img id="mainGif" class="gif" src="Look Hello GIF by sansanplanet.gif" alt="Intro GIF" />
+    <img class="flower-large" src="flwoer.png" alt="Flower Decoration" />
+    <input id="answer" type="text" placeholder="What's ur bf's username in MLBB" oninput="changeGif()" />
+    <button class="enter-btn" onclick="validateAnswer()">
+      <img src="flower.png" class="sunflower" alt="Sunflower" />
+      Enter
+    </button>
+    <div id="countdown" class="countdown" style="display:none;"></div>
+  </div>
+
+  <div class="modal-bg" id="modalBg">
+    <div class="modal">
+      <img id="modalGif" src="" alt="Modal GIF" />
+      <p id="modalMessage"></p>
+    </div>
+  </div>
+
+
+<div class="footer-wrapper">
+  <img
+    src="Bigflower.webp"
+    alt="Footer Flower"
+    class="footer-flower"
+  />  <div class="footer-text">Made by: Hun</div>
+</div>
+
+
+  <script>
+    const correctAnswer = "ñllxan.ninî";
+    const targetTime = new Date("June 25, 2025 12:30:00").getTime();
+
+function changeGif() {
+  document.getElementById("mainGif").src = "PianoCute.gif?" + new Date().getTime();
+}
+
+    function showModal(message, gifUrl) {
+      document.getElementById("modalGif").src = gifUrl + "?t=" + new Date().getTime();
+      document.getElementById("modalMessage").textContent = message;
+      document.getElementById("modalBg").style.display = "flex";
+      setTimeout(() => { document.getElementById("modalBg").style.display = "none"; }, 3000);
+    }
+
+    function validateAnswer() {
+      const input = document.getElementById("answer").value.trim().toLowerCase();
+      if (input === correctAnswer) {
+        document.getElementById("mainGif").src = "correct.gif?" + new Date().getTime();
+        setTimeout(() => {
+          const now = new Date().getTime();
+          if (now >= targetTime) {
+            window.location.href = "Nini.html";
+          } else {
+            showModal("Correct! But it’s not time yet~ 🎀", "Nahh.gif?");
+            document.getElementById("countdown").style.display = "block";
+          }
+        }, 5000);
+      } else {
+        document.getElementById("mainGif").src = "yess.gif?" + new Date().getTime();
+        showModal("Oops! That’s not correct. 💔", "yess.gif?");
+      }
+    }
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetTime - now;
+      if (distance > 0 && document.getElementById("countdown").style.display === "block") {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        document.getElementById("countdown").textContent = `Countdown: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+    }
+
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
