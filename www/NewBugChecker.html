@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Hey Love</title>
+  <style>
+    /* Page setup */
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+    }
+    body {
+      background: url('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2F1200x%2F69%2Fbf%2F99%2F69bf9904ed8e73f973ccd33c6133e602.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex; flex-direction: column; align-items: center;
+      font-family: 'Arial', sans-serif;
+    }
+    h1 { margin-top: 30px; color: #ff4da6; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); font-size: 1.8rem; }
+
+    /* Envelope */
+    #envelope-container { display: flex; justify-content: center; margin-top: 130px; }
+    #envelope {
+      width: 150px; height: 150px;
+      background: url('https://i.postimg.cc/hvWP3mDv/image.png') no-repeat center/contain;
+      cursor: pointer;
+      animation: bumpGlow 2s infinite ease-in-out;
+    }
+
+    @keyframes bumpGlow {
+      0%,100% { transform: scale(1); box-shadow: 0 0 15px rgba(255,150,200,0.4); }
+      50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(255,100,180,0.7); }
+    }
+
+    /* Letter box */
+    #letter-box {
+      display: none; position: absolute; top:100px; left:50%; transform: translateX(-50%);
+      width: 85vw; max-width:360px; padding: 20px;
+      background: rgba(255,230,240,0.95); border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      animation: fadeInMorph 0.6s ease-out forwards;
+    }
+    @keyframes fadeInMorph {
+      0% { transform: translate(-50%,20px) scale(0.8); opacity:0; }
+      100% { transform: translate(-50%,0) scale(1); opacity:1; }
+    }
+    #letter-content {
+      max-height: 400px; overflow-y: auto; overflow-x: hidden;
+      font-style: italic; color: #4a001f; margin-bottom: 20px; padding-right: 10px;
+      box-sizing: border-box; overflow-wrap: anywhere;
+    }
+    #letter-content p { white-space: normal; }
+    #letter-content::-webkit-scrollbar { width:6px; }
+    #letter-content::-webkit-scrollbar-thumb { background: rgba(255,100,180,0.6); border-radius:3px; }
+
+    /* Gift box */
+    #gift-container {
+      display: none; margin: 0 auto 20px; width: 130px; height: 130px; cursor: pointer;
+      position: relative; animation: bumpGlow 2s infinite ease-in-out;
+    }
+    #gift-image { width: 130px; height: auto; display: block; animation: bumpGlow 2s infinite ease-in-out; }
+    #gift-container.open #gift-image { transform: scale(1.05) rotate(-2deg); animation: popOpen 0.4s ease forwards; }
+    @keyframes popOpen {
+      0% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(2deg); }
+      100% { transform: scale(1.05) rotate(-2deg); }
+    }
+
+    #confetti-canvas {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: 9999;
+    }
+
+    /* Popup */
+    #scratch-popup {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      z-index: 10000; display: none;
+    }
+    .popup-box {
+      background: #ffe0f0; border: 2px solid #ffb6d9; border-radius: 16px;
+      padding: 20px 30px; font-size: 1.2rem; color: #a0005e;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2); animation: popFade 3s ease forwards;
+    }
+    @keyframes popFade {
+      0% { opacity: 0; transform: scale(0.9); }
+      10% { opacity: 1; transform: scale(1.05); }
+      100% { opacity: 0; transform: scale(0.8); }
+    }
+
+    #scratch-card {
+      position: fixed; top: 55%; left: 50%; transform: translate(-50%, -50%);
+      width: 300px; height: 200px; display: none; z-index: 9999;
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    #scratch-card img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    #scratch-canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hey Love, I made this just for you</h1>
+  <div id="envelope-container">
+    <div id="envelope"></div>
+    <div id="letter-box">
+      <div id="letter-content">
+        <!-- Your letter content here -->
+        <p style="text-align:center;"><strong>My Dearest pulchritudinous gf,</strong></p>
+
+  <p style="text-align:center;">Writing this on June 6, 2025. this day and yesterday is very hard for me. I really hope by the time you were reading this letter, we have already made up. or make up? mb bugo2 ko gamay sa english. Pero I really hope my efforts this a whole week is not in vain.</p>
+
+  <p style="text-align:center;">Tbh i was very scared. U sent me that tiktok video. Are u giving me a sign? Are unhappy? That day baby was the day I really thought about you n a deeper level. In the past i have always thought that " I really love and needed this girl and cant live without her " but baby yesterday was when i realised that I not only cant live without her but without you I prolly wont improve in my old habits. Specifically of my introverted self.</p>
+
+  <p style="text-align:center;">Yes introverted pa japun ko but im improving. Not only bacause u said u dont want an introverted bf and a nonchalant but also because i wanted to. For you and me.</p>
+
+  <p style="text-align:center;">My love, i know loving me is often hard. I know that I am not affectionate enough to define how much i love and care about you, which may often times lead of you feeling that kinakahiya lang kita. And tbh it really hurts that i cant give you the love you deserved and needed. I know my efforts are not enough. I know that the "improvements" im talking about is unrecognizable. But baby, i really love you, I just dont know how to express it.</p>
+
+  <p style="text-align:center;">For 11 years of my life. Everyday im texting my biological mom and dad that "I love you" whn they are so far from home. Maybe thats why im okay with us not really meeting each other irl bacause "im used to it" all i had was their picture to look at. Please dont get the wrong idea my love. If this is the wrong way of loving someone? And a bf being okay not seeing his gf for a long time is pathetic. And you might think that do i even love you. But bai I really do. And as summer break goes by, day by day im starting to miss you more and more.</p>
+
+  <p style="text-align:center;">But im now writing this letter to vent on you. im here to tell you how I appreciate you very much. Im not really good at talking hence i created this letter. I wanna show you how i wanna love you so muchyou dont wanna find it on another boy again.</p>
+
+  <p style="text-align:center;">Baby everytime gakasuko ka and wala kay energy mag chat. I really appreciate doing your best. Para lang dili magpadugay ang argument nato. I really appreciate how you always wanna listen. But im not sure if you even read those big and long paragraph full of bullshit. My love im sorry for hurting you if ever. I dont mean it. Im just probaly insecure. But im fighting it, dont worry. all because I want to be the "perfect bf" for my wife.</p>
+
+  <p style="text-align:center;">Baby, I really hate it when your feeling insecure about ur body. I just dont get it. Majority of females in the whole world would die to have that shape of yours. My love, you are beautiful inside and outside. And it honestly shows. My Love, often times i fell like my words are meaningless since you dont believe them. But i love you, even the "you" without make up. Or even you being a soft girl typa shi or some gangsta typa day. Baby, I im in support of whatever you will do, as long as it will not harm yourself. I will always be by your side.</p>
+
+  <p style="text-align:center;">Im sorry im not the same as the other bf, I probobly can do the things you find cute. But whenever you feel like it. Please tell me, cuz even if i prolly cant do it. I still wanna try it. With you and you only. I wanna try my Best for you. And if it looks like im not loving you enough the i will love you more than how much i love you today, and the day your reading this. Just tell me cuz i will not know. I want the best of you. Good luck Nicole and i love you my love. Nice name</p>
+
+  <p style="text-align:center;">This letter is one of the ways I show love—please accept it… Please read it. Please love it. No matter how small.</p>
+
+  <p style="text-align:center;"><strong>By your number one supporter (and lover),<br/>Hun, Diaz</strong></p>
+        <div id="gift-container" title="Click to open gift">
+          <img id="gift-image" src="https://i.postimg.cc/5y0pTXsc/image.png" alt="Gift" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <canvas id="confetti-canvas"></canvas>
+  <div id="scratch-popup"><div class="popup-box">Click and scratch me!</div></div>
+  <div id="scratch-card">
+    <canvas id="scratch-canvas"></canvas>
+    <img id="hidden-image" src="https://i.postimg.cc/kgx4T5xR/image.png" alt="Surprise" />
+  </div>
+
+  <script>
+    const envelope = document.getElementById('envelope');
+    const letterBox = document.getElementById('letter-box');
+    const giftContainer = document.getElementById('gift-container');
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const popup = document.getElementById('scratch-popup');
+    const card = document.getElementById('scratch-card');
+    const canvas = document.getElementById('scratch-canvas');
+    const ctx = canvas.getContext('2d');
+
+    document.addEventListener('gesturestart', e => e.preventDefault());
+
+    envelope.onclick = () => {
+      envelope.style.display = 'none';
+      letterBox.style.display = 'block';
+      setTimeout(() => giftContainer.style.display = 'block', 500);
+    };
+
+    giftContainer.onclick = () => {
+      if (giftContainer.classList.contains('open')) return;
+      giftContainer.classList.add('open');
+      setTimeout(() => {
+        startConfetti();
+        showScratchPopup();
+      }, 700);
+    };
+
+    function startConfetti() {
+      confettiCanvas.style.display = 'block';
+      confettiCanvas.width = innerWidth;
+      confettiCanvas.height = innerHeight;
+      const ctx = confettiCanvas.getContext('2d');
+      const pieces = [];
+      for (let i = 0; i < 80; i++) {
+        pieces.push({ x: Math.random() * innerWidth, y: -Math.random() * innerHeight, r: 4 + Math.random() * 6, c: ['#ff4da6', '#ffd1e6', '#fff'][Math.floor(Math.random() * 3)], s: Math.random() * 3 + 2 });
+      }
+      let anim = true;
+      function run() {
+        if (!anim) return;
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+        pieces.forEach(p => {
+          p.y += p.s;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+          ctx.fillStyle = p.c;
+          ctx.fill();
+        });
+        requestAnimationFrame(run);
+      }
+      run();
+      setTimeout(() => { anim = false; confettiCanvas.style.display = 'none'; }, 4000);
+    }
+
+    function showScratchPopup() {
+      popup.style.display = 'block';
+      card.style.display = 'block';
+      setTimeout(() => popup.style.display = 'none', 3000);
+      setupScratch();
+    }
+
+    function setupScratch() {
+      const width = canvas.width = canvas.offsetWidth;
+      const height = canvas.height = canvas.offsetHeight;
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, width, height);
+      let isDrawing = false;
+      function scratch(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI * 2, false);
+        ctx.fill();
+      }
+      canvas.addEventListener('mousedown', () => isDrawing = true);
+      canvas.addEventListener('mouseup', () => isDrawing = false);
+      canvas.addEventListener('mousemove', e => isDrawing && scratch(e));
+      canvas.addEventListener('touchstart', () => isDrawing = true, { passive: true });
+      canvas.addEventListener('touchend', () => isDrawing = false);
+      canvas.addEventListener('touchmove', e => isDrawing && scratch(e), { passive: true });
+    }
+
+    letterBox.addEventListener('wheel', e => e.stopPropagation());
+    letterBox.addEventListener('touchmove', e => e.stopPropagation());
+  </script>
+</body>
+</html>
