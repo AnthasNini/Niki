@@ -212,7 +212,7 @@
 </head>
 <body>
   <div class="container">
-    <img id="mainGif" class="gif" src="Look Hello GIF by sansanplanet.gif" alt="Intro GIF" />
+    <img id="mainGif" class="gif" src="lookhell.gif" alt="Intro GIF" />
     <img class="flower-large" src="flwoer.png" alt="Flower Decoration" />
     <input id="answer" type="text" placeholder="What's ur bf's username in MLBB" oninput="changeGif()" />
     <button class="enter-btn" onclick="validateAnswer()">
@@ -241,7 +241,7 @@
 
   <script>
     const correctAnswer = "ñllxan.ninî";
-    const targetTime = new Date("June 23, 2025 12:30:00").getTime();
+    const targetTime = new Date("June 5, 2025 12:30:00").getTime();
 
 function changeGif() {
   document.getElementById("mainGif").src = "PianoCute.gif?" + new Date().getTime();
@@ -257,7 +257,7 @@ function changeGif() {
     function validateAnswer() {
       const input = document.getElementById("answer").value.trim().toLowerCase();
       if (input === correctAnswer) {
-        document.getElementById("mainGif").src = "correct.gif" + new Date().getTime();
+        document.getElementById("mainGif").src = "clap.gif" + new Date().getTime();
         setTimeout(() => {
           const now = new Date().getTime();
           if (now >= targetTime) {
