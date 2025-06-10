@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Cute Download Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Luckiest+Guy&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset & base */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { overflow: hidden; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                  url('https://i.imgur.com/QKGbyTV.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      animation: backgroundFade 1.5s ease-out;
+    }
+    @keyframes backgroundFade { from { filter: brightness(0); } to { filter: brightness(1); } }
+
+    /* Container styling */
+    .container {
+      background-color: #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(255, 255, 0, 0.8);
+      max-width: 400px;
+      width: 90%;
+      padding: 20px;
+      text-align: center;
+      animation: containerPop 0.8s ease-out, glowContainer 1s ease-in-out infinite alternate;
+    }
+    @keyframes containerPop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes glowContainer { from { box-shadow: 0 0 10px rgba(255, 255, 0, 0.6); } to { box-shadow: 0 0 20px rgba(255, 255, 0, 1); } }
+
+    .container h1 { font-size: 2rem; margin-bottom: 10px; color: #000; text-shadow: 0 0 8px yellow; animation: glowText 2s infinite alternate, fadeInDown .8s .2s both; }
+    @keyframes glowText { from { text-shadow: 0 0 5px yellow; } to { text-shadow: 0 0 15px yellow; } }
+    @keyframes fadeInDown { 0% { opacity: 0; transform: translateY(-20px); } 100% { opacity: 1; transform: translateY(0); } }
+    .container p { font-size: 1rem; margin-bottom: 20px; color: #444; line-height:1.4; animation: fadeInUp .8s .4s both; }
+    @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+
+    /* Download button */
+    .download-btn { display:inline-block; background:#FFC107; color:#000; font-weight:600; padding:12px 24px; border:none; border-radius:30px; text-decoration:none; font-size:1rem; position:relative; overflow:hidden; animation:fadeIn .8s .6s both, glowButton 2s infinite alternate; box-shadow:0 0 10px yellow; text-shadow:0 0 5px yellow; }
+    @keyframes glowButton { from{box-shadow:0 0 5px yellow} to{box-shadow:0 0 20px yellow} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .download-btn span.circle { position:absolute; width:12px; height:12px; background:yellow; border-radius:50%; animation:bounceCircle 1.5s infinite ease-in-out; opacity:.8; }
+    @keyframes bounceCircle { 0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)} }
+
+    /* Floating flower */
+    .top-flower { width:199px; max-width:100%; position:fixed; top:20px; left:50%; transform:translateX(-50%); filter:drop-shadow(4px 4px 10px rgba(0,0,0,0.3)); animation:floatFlower 5s infinite alternate; z-index:10; }
+    @keyframes floatFlower { 0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-10px)} }
+
+    /* Popup overlay */
+    .popup-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; justify-content:center; align-items:center; z-index:1000; animation:fadeIn .3s; }
+    @keyframes popIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
+    @keyframes rotateIn { 0%{transform:rotate(-180deg);opacity:0}100%{transform:rotate(0);opacity:1} }
+    @keyframes pulse { 0%,100%{transform:scale(1)}50%{transform:scale(1.1)} }
+
+    .popup-content { background:#FFF9C4; padding:20px; border-radius:15px; text-align:center; max-width:80%; animation:popIn .3s; box-shadow:0 0 15px rgba(255,215,0,0.7); }
+    .popup-content img {
+  width: 200px;
+  height: auto;
+  max-width: 80%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  animation: rotateIn .2s;
+}
+    .popup-content p { font-size:1.5rem; color:#E91E63; font-weight:600; animation:pulse 1s infinite 1s; }
+
+    /* Prove popup specifics */
+    #provePopup h2 { font-family:'Luckiest Guy',cursive; font-size:2rem; margin-bottom:15px; color:#000; }
+    #provePopup label { color:green; font-size:1.1rem; }
+    #provePopup .pink { color:#E91E63; }
+    #provePopup .prove-step { display:none; margin:10px 0; align-items:center; }
+    #provePopup .prove-step input { width:20px; height:20px; margin-right:10px; }
+    #provePopup .approve-btn { background:#ccc; color:#fff; padding:10px 20px; border:none; border-radius:10px; font-weight:600; cursor:not-allowed; transition:background .3s, box-shadow .3s; }
+    #provePopup .approve-btn.enabled { background:#4CAF50; cursor:pointer; }
+    /* Red glow + longer shake */
+    @keyframes glowRed {
+  from { box-shadow: 0 0 5px red !important; }
+  to   { box-shadow: 0 0 20px red !important; }
+}
+    @keyframes shake { 0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)} }
+    .approve-red { animation:glowRed 3.5s ease-in-out both; }
+    .approve-shake { animation:shake 1s ease-in-out both; }
+        /* ↑↑ immediately after the generic rules, add this ↓↓ */
+    /* force the animations even if something else resets box-shadow/transform */
+    button#approveBtn.approve-red {
+      animation: glowRed 3.5s ease-in-out both !important;
+    }
+    button#approveBtn.approve-shake {
+      animation: shake 1s ease-in-out both !important;
+    }
+
+
+    @media (max-width:480px){.container h1{font-size:1.5rem}.download-btn{width:100%;}}
+
+.rgb-text {
+  font-size: 2rem;
+  font-weight: bold;
+  animation: rgbColors 1.5s linear infinite;
+  text-align: center;
+  color: red; /* fallback */
+  text-shadow: none !important;
+}
+
+@keyframes rgbColors {
+  0%   { color: red !important; }
+  25%  { color: lime !important; }
+  50%  { color: blue !important; }
+  75%  { color: cyan !important; }
+  100% { color: magenta !important; }
+}
+  </style>
+</head>
+<body>
+  <img class="top-flower" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ffreepngimg.com%2Fdownload%2Fflowers%2F23441-2-yellow-flowers-bouquet-transparent-image.png&f=1&nofb=1" alt="Yellow Flowers" />
+  <div class="container">
+    <h1>Get Your File!</h1>
+    <p>Click the button below to download the app i bult for u only. Enjoy!😋😋😋</p>
+    <a id="downloadBtn" class="download-btn" href="https://drive.google.com/uc?export=download&id=1vTTFt4vSz2QhuaLgesOjWqr0UoTW8lyd" download="My Love.zip">
+     Download Now ₍ᐢ•(τ)•ᐢ₎
+      <span class="circle" style="top:10%;left:10%;animation-delay:0s"></span>
+      <span class="circle" style="top:20%;left:80%;animation-delay:.2s"></span>
+      <span class="circle" style="top:70%;left:30%;animation-delay:.4s"></span>
+      <span class="circle" style="top:50%;left:60%;animation-delay:.6s"></span>
+      <span class="circle" style="top:40%;left:20%;animation-delay:.8s"></span>
+      <span class="circle" style="top:80%;left:50%;animation-delay:1s"></span>
+    </a>
+  </div>
+
+  <!-- Prove Yourself Popup -->
+  <div id="provePopup" class="popup-overlay">
+    <div class="popup-content">
+      <img id="proveGif" src="" alt="Step GIF" />
+      <h2>Prove Yourself First!!!!</h2>
+      <div class="prove-step" data-step="0"><input type="checkbox" id="step0"><label for="step0">Do you <span class="pink">Love</span> Me?</label></div>
+      <div class="prove-step" data-step="1"><input type="checkbox" id="step1"><label for="step1">Are you <span class="pink">Sure</span>?</label></div>
+      <div class="prove-step" data-step="2"><input type="checkbox" id="step2"><label for="step2">Pls allow me to <span class="pink">Spoil</span> you🥺🥺🥺</label></div>
+      <div class="prove-step" data-step="3"><input type="checkbox" id="step3"><label for="step3"><span class="pink">Accept</span> mo naman to oh☹️☹️☹️</label></div>
+      <div class="prove-step" data-step="4"><input type="checkbox" id="step4"><label for="step4">WAIT<span class="pink"> FR????</span></label></div>
+      <div class="prove-step" data-step="5"><input type="checkbox" id="step5"><label for="step5">PROMISE ME U WOULD <span class="pink"> ACCEPT IT🥰🥰🥰</span></label></div>
+      <button class="approve-btn" id="approveBtn">Approve</button>
+    </div>
+  </div>
+
+  <!-- Final Cute Popup -->
+  <div id="popup" class="popup-overlay">
+    <div class="popup-content">
+      <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWR0aDQxODduZTNjZGluNHIzeDBsMmpyMTU1ZW43d3Vmc2RjeWt2cyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OVvrRFQobaLv0Ije9h/giphy.gif" alt="Cute Gif">
+      <p class="rgb-text">I Love You</p>
+    </div>
+  </div>
+
+  <script>
+    const gifs = [
+      'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDVrbHR1OGk4Mmw5amdjMDR1N2w5eGxnZGd6bjlocHhuaXBtbmxldyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tnesCNeWokIRY6IAZf/giphy.gif',
+      'https://media.giphy.com/media/HS3yODyRWKneOxWib8/giphy.gif?cid=ecf05e47a02p1gc0uwonacdn1wn1oixxcnlyditgp4q91ir2&ep=v1_gifs_related&rid=giphy.gif&ct=g',
+      'https://media.giphy.com/media/wOuqaCWDQ6riWlHPwR/giphy.gif?cid=ecf05e47qbl7sr70f711ldafpyhedi040wwuhy7nqo4c6xhn&ep=v1_gifs_related&rid=giphy.gif&ct=g',
+      'https://media.giphy.com/media/2smegWIwAjU6pW3w6k/giphy.gif?cid=ecf05e47a02p1gc0uwonacdn1wn1oixxcnlyditgp4q91ir2&ep=v1_gifs_related&rid=giphy.gif&ct=g',
+      'https://media.giphy.com/media/QJ3CHFoxpsbE1gCkRf/giphy.gif?cid=ecf05e47qbl7sr70f711ldafpyhedi040wwuhy7nqo4c6xhn&ep=v1_gifs_related&rid=giphy.gif&ct=g',
+      'https://media.giphy.com/media/9kdBu4qz3xIyndafcz/giphy.gif?cid=ecf05e47a02p1gc0uwonacdn1wn1oixxcnlyditgp4q91ir2&ep=v1_gifs_related&rid=giphy.gif&ct=g'
+    ];
+    let step = 0;
+    const provePopup = document.getElementById('provePopup');
+    const popup = document.getElementById('popup');
+    const approveBtn = document.getElementById('approveBtn');
+    const steps = Array.from(document.querySelectorAll('#provePopup .prove-step'));
+    const gifImg = document.getElementById('proveGif');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    downloadBtn.addEventListener('click', e => {
+      e.preventDefault();
+      provePopup.style.display = 'flex';
+      loadStep(0);
+    });
+
+    function loadStep(i) {
+      if (i < steps.length) {
+        gifImg.src = gifs[i];
+        steps[i].style.display = 'flex';
+        const input = steps[i].querySelector('input');
+        input.checked = false;
+        approveBtn.classList.remove('enabled', 'approve-red', 'approve-shake');
+        input.onchange = () => approveBtn.classList.toggle('enabled', input.checked);
+      }
+    }
+
+      approveBtn.addEventListener('click', () => {
+  // only proceed if it’s enabled
+  if (!approveBtn.classList.contains('enabled')) return;
+
+  // 1️⃣ remove old classes (in case)
+  approveBtn.classList.remove('approve-red','approve-shake');
+
+  // 2️⃣ force reflow so the browser will replay the animation every time
+  void approveBtn.offsetWidth;
+
+  // 3️⃣ re-add them, now guaranteed to trigger
+  approveBtn.classList.add('approve-red','approve-shake');
+
+  // 4️⃣ clean up after it finishes
+  approveBtn.addEventListener('animationend', () => {
+    approveBtn.classList.remove('approve-red','approve-shake');
+  }, { once: true });
+
+  // 5️⃣ then move on to the next step or final popup
+  if (++step < steps.length) {
+    setTimeout(() => loadStep(step), 800);
+  } else {
+    setTimeout(() => {
+  provePopup.style.display = 'none';
+  popup.style.display   = 'flex';
+  setTimeout(() => {
+    popup.style.display = 'none';
+
+    // ← instead of window.location.href, trigger a click:
+    document.getElementById('realDownload').click();
+  }, 5000);
+}, 500);
+  }
+});
+  </script>
+  <a id="realDownload" href="https://drive.google.com/uc?export=download&id=1vTTFt4vSz2QhuaLgesOjWqr0UoTW8lyd" download style="display: none;"></a>
+</body>
+</html> 
