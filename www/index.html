@@ -257,7 +257,7 @@ function changeGif() {
     function validateAnswer() {
       const input = document.getElementById("answer").value.trim().toLowerCase();
       if (input === correctAnswer) {
-        document.getElementById("mainGif").src = "clap.gif" + new Date().getTime();
+        document.getElementById("mainGif").src = "clap.gif?" + new Date().getTime();
         setTimeout(() => {
           const now = new Date().getTime();
           if (now >= targetTime) {
