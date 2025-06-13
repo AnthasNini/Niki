@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CUBED - Capitol University Basic Education Department</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: url('https://i.postimg.cc/7ZpNPHz1/pixelup-1749108114473.jpg') center/cover no-repeat fixed;
+        }
+
+        .content-wrapper {
+            padding-bottom: 90px; /* Footer height */
+        }
+
+        /* Red Theme Footer */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 448px; /* Corresponds to max-w-md */
+            margin-left: auto;
+            margin-right: auto;
+            z-index: 40;
+            background: #B91C1C; /* red-700 */
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.2);
+        }
+
+        .footer-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #FDE68A; /* amber-200 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: transform 0.2s ease;
+        }
+        .footer-icon:hover {
+            transform: scale(1.1);
+        }
+        /* MODIFIED: Replaced the old i style with this img style */
+        .footer-icon img {
+            width: 100px;
+            height: 82px;
+            object-fit: cover;
+            
+        }
+        
+        /* Description Card Flip Animation */
+        .description-card {
+            perspective: 1000px;
+        }
+        .description-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .description-card.is-flipped .description-inner {
+            transform: rotateY(180deg);
+        }
+        .description-front, .description-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1rem; /* p-4 */
+            background: #FEF2F2; /* red-50 */
+            border: 1px solid #FCA5A5; /* red-300 */
+        }
+        .description-back {
+            transform: rotateY(180deg);
+        }
+        #description-text-short {
+             -webkit-line-clamp: 6;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Modal transitions */
+        .modal-hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        .modal-visible {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .modal-transition {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="max-w-md mx-auto min-h-screen shadow-lg relative">
+        <div class="content-wrapper">
+
+            <header class="relative mb-8">
+                <div class="h-48">
+                     <img src="CUBEDTreeBackground.jpg" alt="Capitol University Campus" class="w-full h-full object-cover">
+                </div>
+                 <a href="MIN.html" class="absolute top-4 left-4 z-20 bg-black/50 backdrop-blur-sm text-white font-bold py-2 px-4 rounded-full shadow-lg flex items-center gap-2 text-md hover:bg-black/70 transition-colors">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back</span>
+                </a>
+                
+                <div class="absolute top-28 left-1/2 -translate-x-1/2 z-10">
+                    <img src="CUBED-2.jpg" alt="CUBED Logo" class="w-28 h-28 rounded-full border-4 border-white shadow-xl">
+                </div>
+            </header>
+
+            <section class="text-center px-10 -mt-14 pt-14 pb-6 bg-white rounded-b-3xl shadow-md">
+                 <h1 class="text-3xl font-bold text-gray-800">CUBED</h1>
+                 <p class="text-lg font-semibold text-green-600 animate-pulse">1.2 km away</p>
+            </section>
+
+                 <div class="mt-4 w-full flex justify-around items-center text-center text-gray-700 text-sm font-medium">
+                    <button id="favoriteBtn" class="flex flex-col items-center gap-1.5 transform hover:scale-110 transition-transform">
+                        <i class="far fa-bookmark text-3xl transition-colors"></i>
+                        <span>Favorite</span>
+                    </button>
+                    <button class="flex flex-col items-center gap-1.5 transform hover:scale-110 transition-transform" onclick="openModal('3d-tour')">
+                        <i class="fas fa-vr-cardboard text-3xl"></i>
+                        <span>3D Tour</span>
+                    </button>
+                    <button class="flex flex-col items-center gap-1.5 transform hover:scale-110 transition-transform" onclick="openModal('contact')">
+                        <i class="fas fa-info-circle text-3xl"></i>
+                        <span>Contact</span>
+                    </button>
+                    <button class="flex flex-col items-center gap-1.5 transform hover:scale-110 transition-transform" onclick="openModal('share')">
+                         <i class="fas fa-share-alt text-3xl"></i>
+                        <span>Share</span>
+                    </button>
+                </div>
+            
+            
+            <main class="px-4 space-y-4 mt-4">
+                <section class="grid grid-cols-2 gap-4" id="info-grid">
+                    <div class="space-y-3">
+                        <div class="bg-red-50 border border-red-200 rounded-xl p-3 flex flex-col shadow-md">
+                            <div class="mb-2">
+                                <p class="font-bold text-red-800 text-sm">Entrance Exam</p>
+                                <p class="text-xs text-red-700">May 26 - May 30</p>
+                            </div>
+                            <button onclick="openModal('more-info-modal')" class="bg-red-600 text-white text-xs font-semibold px-2 py-1.5 rounded-md hover:bg-red-700 transition w-full shadow transform hover:scale-105">More Info</button>
+                        </div>
+                        <div class="bg-red-50 border border-red-200 rounded-xl p-3 flex flex-col shadow-md">
+                             <div class="mb-2">
+                                <p class="font-bold text-red-800 text-sm">Scholarship Exam</p>
+                                <p class="text-xs text-red-700">June 2 - June 6</p>
+                            </div>
+                            <button onclick="openModal('more-info-modal')" class="bg-red-600 text-white text-xs font-semibold px-2 py-1.5 rounded-md hover:bg-red-700 transition w-full shadow transform hover:scale-105">More Info</button>
+                        </div>
+                    </div>
+                    
+                    <div id="description-container" class="description-card">
+                       <div class="description-inner">
+                            <div class="description-front">
+                                <p id="description-text-short" class="text-gray-700 text-sm leading-relaxed">Capitol University Basic Education Department is a non-sectarian private school that is really rrly cool lol, you should enroll here. We teach character, competence, commitment, culture, and care. Our mission is to provide quality education and mold future leaders. Explore our programs and discover a world of opportunities waiting for you. Join our vibrant community and start your journey to success.</p>
+                                <button id="see-more-btn" class="text-red-600 font-semibold text-xs text-right mt-2 hover:underline">See More...</button>
+                            </div>
+                            <div class="description-back">
+                                <p class="text-gray-700 text-sm leading-relaxed overflow-y-auto h-full">Capitol University Basic Education Department is a non-sectarian private school that is really rrly cool lol, you should enroll here. We teach character, competence, commitment, culture, and care. Our mission is to provide quality education and mold future leaders. Explore our programs and discover a world of opportunities waiting for you. Join our vibrant community and start your journey to success. The curriculum is designed to be both challenging and supportive, encouraging students to excel academically while also developing their personal and social skills. Our dedicated faculty are experts in their fields and are committed to helping each student reach their full potential.</p>
+                                <button id="see-less-btn" class="text-red-600 font-semibold text-xs text-right mt-2 hover:underline">See Less</button>
+                            </div>
+                       </div>
+                    </div>
+                </section>
+
+                <section class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-2">
+                        
+                        <div class="gallery-item relative rounded-lg aspect-square shadow-md overflow-hidden cursor-pointer group">
+                            <img src="Messenger_creation_4DAE2B72-1835-4FF9-AC34-55F2088D6581.jpeg" alt="Gallery Image 1" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                        </div>
+                        
+                        <div class="gallery-item relative rounded-lg aspect-square shadow-md overflow-hidden cursor-pointer group">
+                            <img src="Messenger_creation_713A4928-8238-4057-A0E4-057DA1FD374A.jpeg" alt="Gallery Image 2" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                        </div>
+                        
+                        <div class="gallery-item relative rounded-lg aspect-square shadow-md overflow-hidden cursor-pointer group">
+                            <img src="Messenger_creation_A9348375-67B1-4ABA-B670-D8B082080664.jpeg" alt="Gallery Image 3" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                        </div>
+                        
+                        <div class="gallery-item relative rounded-lg aspect-square shadow-md cursor-pointer overflow-hidden group">
+                            <img src="Messenger_creation_931D5B85-0803-4B17-8F99-279B80B9E8F8.jpeg" alt="More photos" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-2xl">
+                                <span class="transition-opacity duration-300 group-hover:opacity-0">+24</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>
+                        <div class="h-full rounded-2xl overflow-hidden border-2 border-red-200 shadow-lg">
+                            <iframe id="mapFrame" class="w-full h-full" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.922969399436!2d124.6548523759247!3d8.49774619736858!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32fff2e283818e35%3A0x24220373c24d101d!2sCapitol%20University!5e0!3m2!1sen!2sph!4v1718298495147!5m2!1sen!2sph" allowfullscreen="" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <footer>
+            <div class="footer-icon" onclick="alert('Map clicked')">
+                <img src="Map.png" alt="Map">
+            </div>
+            <div class="footer-icon" onclick="alert('Home clicked')">
+                <img src="Center.png" alt="Home">
+            </div>
+            <div class="footer-icon" onclick="alert('Menu clicked')">
+                <img src="Menu.png" alt="Menu">
+            </div>
+        </footer>
+
+        <div id="modal-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-transition modal-hidden">
+            <div id="favorite-modal" class="hidden bg-white rounded-2xl shadow-2xl w-full max-w-sm text-center transform transition-all">
+                <div class="p-6">
+                    <i class="fas fa-star text-4xl text-yellow-400 mb-4"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Added to Favorites!</h3>
+                    <p class="text-gray-600 text-sm mt-1">You can find CUBED in your favorites list.</p>
+                </div>
+                <div class="bg-gray-100 px-4 py-3 rounded-b-2xl">
+                    <button onclick="closeModal()" class="w-full bg-red-600 text-white text-sm font-semibold py-2 rounded-lg hover:bg-red-700 transition">Awesome!</button>
+                </div>
+            </div>
+             <div id="3d-tour-modal" class="hidden bg-white rounded-2xl shadow-2xl w-full max-w-sm text-center transform transition-all">
+                <div class="p-6">
+                    <i class="fas fa-vr-cardboard text-4xl text-blue-500 mb-4"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">3D Tour Unavailable</h3>
+                    <p class="text-gray-600 text-sm mt-1">We're working on a virtual tour experience. Please check back later!</p>
+                </div>
+                <div class="bg-gray-100 px-4 py-3 rounded-b-2xl">
+                     <button onclick="closeModal()" class="w-full bg-gray-600 text-white text-sm font-semibold py-2 rounded-lg hover:bg-gray-700 transition">Close</button>
+                </div>
+            </div>
+            <div id="contact-modal" class="hidden bg-white rounded-2xl shadow-2xl w-full max-w-sm text-center transform transition-all">
+                <div class="p-6">
+                    <i class="fas fa-phone-alt text-4xl text-green-500 mb-4"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Contact Information</h3>
+                    <p class="text-gray-600 text-sm mt-1">Phone: 0955 981 8897</p>
+                     <p class="text-gray-600 text-sm mt-1">Email: New_Gen_Pioneers@gmail.com</p>
+                </div>
+                 <div class="bg-gray-100 px-4 py-3 rounded-b-2xl">
+                     <button onclick="closeModal()" class="w-full bg-gray-600 text-white text-sm font-semibold py-2 rounded-lg hover:bg-gray-700 transition">Close</button>
+                </div>
+            </div>
+             <div id="share-modal" class="hidden bg-white rounded-2xl shadow-2xl w-full max-w-sm text-center transform transition-all">
+                <div class="p-6">
+                    <i class="fas fa-share-square text-4xl text-indigo-500 mb-4"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Share with Friends</h3>
+                    <p class="text-gray-600 text-sm mt-1">Share this page via your favorite app.</p>
+                </div>
+                 <div class="bg-gray-100 px-4 py-3 rounded-b-2xl">
+                    <button onclick="shareLink()" class="w-full bg-indigo-600 text-white text-sm font-semibold py-2 rounded-lg hover:bg-indigo-700 transition">Share Now</button>
+                </div>
+            </div>
+
+            <div id="more-info-modal" class="hidden bg-white rounded-2xl shadow-2xl w-full max-w-sm text-center transform transition-all">
+                <div class="p-6">
+                    <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Feature Unavailable</h3>
+                    <p class="text-gray-600 text-sm mt-1">This feature is unavailable for now.</p>
+                </div>
+                <div class="bg-gray-100 px-4 py-3 rounded-b-2xl">
+                    <button onclick="closeModal()" class="w-full bg-red-600 text-white text-sm font-semibold py-2 rounded-lg hover:bg-red-700 transition">Close</button>
+                </div>
+            </div>
+
+            <div id="gallery-modal" class="hidden bg-white rounded-2xl shadow-2xl w-full max-w-sm text-center transform transition-all">
+                <div class="p-6">
+                    <i class="fas fa-images text-4xl text-red-500 mb-4"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Coming Soon!</h3>
+                    <p class="text-gray-600 text-sm mt-1">More updated pictures coming soon!</p>
+                </div>
+                <div class="bg-gray-100 px-4 py-3 rounded-b-2xl">
+                    <button onclick="closeModal()" class="w-full bg-red-600 text-white text-sm font-semibold py-2 rounded-lg hover:bg-red-700 transition">Got it</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const backdrop = document.getElementById('modal-backdrop');
+        const modals = {
+            'favorite': document.getElementById('favorite-modal'),
+            '3d-tour': document.getElementById('3d-tour-modal'),
+            'contact': document.getElementById('contact-modal'),
+            'share': document.getElementById('share-modal'),
+            'more-info-modal': document.getElementById('more-info-modal'),
+            'gallery-modal': document.getElementById('gallery-modal')
+        };
+        let activeModal = null;
+
+        function openModal(modalName) {
+            if (activeModal) activeModal.classList.add('hidden');
+            activeModal = modals[modalName];
+            if (activeModal) {
+                backdrop.classList.remove('modal-hidden');
+                backdrop.classList.add('modal-visible');
+                activeModal.classList.remove('hidden');
+            }
+        }
+
+        function closeModal() {
+            backdrop.classList.remove('modal-visible');
+            backdrop.classList.add('modal-hidden');
+            if (activeModal) {
+                setTimeout(() => { // wait for fade out
+                    activeModal.classList.add('hidden');
+                    activeModal = null;
+                }, 300);
+            }
+        }
+
+        // Favorite Button Logic
+        const favoriteBtn = document.getElementById('favoriteBtn');
+        let isFavorited = false;
+        favoriteBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            isFavorited = !isFavorited;
+            const icon = favoriteBtn.querySelector('i');
+            icon.classList.toggle('far', !isFavorited);
+            icon.classList.toggle('fas', isFavorited);
+            icon.classList.toggle('text-yellow-400', isFavorited);
+            if (isFavorited) {
+                openModal('favorite');
+            }
+        });
+
+        // Share functionality
+        function shareLink() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Capitol University Basic Education Department',
+                    text: 'Check out CUBED!',
+                    url: window.location.href,
+                }).catch((error) => console.log('Error sharing', error));
+            } else {
+                // Fallback for browsers that don't support navigator.share
+                alert('Share feature is not available. Please copy the link manually.');
+            }
+            closeModal();
+        }
+
+        // Description Card Flip Logic
+        const descriptionCard = document.getElementById('description-container');
+        const seeMoreBtn = document.getElementById('see-more-btn');
+        const seeLessBtn = document.getElementById('see-less-btn');
+
+        seeMoreBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            descriptionCard.classList.add('is-flipped');
+        });
+        
+        seeLessBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            descriptionCard.classList.remove('is-flipped');
+        });
+        
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                openModal('gallery-modal');
+            });
+        });
+
+        // Align description card height to exam cards height initially
+        function alignCardHeight() {
+             const infoGrid = document.getElementById('info-grid');
+             const examCardsContainer = infoGrid.querySelector('.space-y-3');
+             const descriptionInner = descriptionCard.querySelector('.description-inner');
+             const front = descriptionCard.querySelector('.description-front');
+             const back = descriptionCard.querySelector('.description-back');
+             
+             const targetHeight = examCardsContainer.offsetHeight;
+
+             descriptionCard.style.height = `${targetHeight}px`;
+             descriptionInner.style.height = `${targetHeight}px`;
+             front.style.height = `${targetHeight}px`;
+             back.style.height = `${targetHeight}px`;
+        }
+        
+        window.addEventListener('load', alignCardHeight);
+        window.addEventListener('resize', alignCardHeight);
+
+    </script>
+</body>
+</html>

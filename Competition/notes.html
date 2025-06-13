@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>School Finder</title>
+  <style>
+    /* ------------ global reset ------------ */
+    * { margin:0; padding:0; box-sizing:border-box }
+    html, body {
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://i.postimg.cc/7ZpNPHz1/pixelup-1749108114473.jpg') center/cover no-repeat;
+      overflow:hidden;
+      position: relative;
+    }
+    button { cursor:pointer; }
+
+    /* ------------ header ------------ */
+    header {
+      position:sticky; top:0; z-index:10;
+      background:#fff; padding:1rem;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    }
+    .top-bar {
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .location-group {
+      display:flex; flex-direction:column;
+    }
+    .location-text { font-size:1.2rem; font-weight:bold; color:#000; }
+    .user-location { color:#d32f2f; margin-top:.25rem; font-size:0.9rem; }
+    #retryHeaderBtn {
+      margin-top:.5rem;
+      background:#d32f2f; color:#fff;
+      border:none; padding:.4rem .8rem;
+      border-radius:8px;
+      display:none;
+      align-self:start;
+      font-size:.9rem;
+    }
+    .filter-btn {
+      background:#d32f2f; /* match design orange */
+      color:#ffffff;
+      border:none; padding:.5rem 1rem;
+      border-radius:8px; font-weight:bold;
+      font-size:.9rem;
+      transition:background .2s;
+    }
+    .filter-btn:hover { background:#f15900 }
+
+    .search-bar {
+      display:flex; margin-top:.5rem;
+      border:2px solid #ffeb3b; border-radius:10px;
+      overflow:hidden;
+    }
+    .search-bar input {
+      flex:1; padding:.75rem; border:none; outline:none;
+    }
+    .search-bar button {
+      background:#e3f2fd; border:none; width:48px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.1rem;
+    }
+    .search-bar button:hover { background:#bbdefb }
+
+    /* ------------ scrollable content ------------ */
+    .scroll-section {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 1rem;
+      /* ensure content is not hidden behind fixed footer */
+      margin-bottom: 60px;
+    }
+    .tab-section { margin-bottom:2rem }
+    .tab-title {
+      color:#d32f2f; font-size:1.2rem; font-weight:bold;
+      margin-bottom:1rem;
+    }
+    .school-tab {
+      display:flex; align-items:center;
+      background:rgba(255,255,255,.9);
+      border-radius:12px; padding:.75rem;
+      margin-bottom:.75rem;
+      text-decoration:none; color:#333;
+      box-shadow:0 4px 12px rgba(0,0,0,.1);
+      transition:transform .2s;
+    }
+    .school-tab:hover { transform:scale(1.02) }
+    .school-logo {
+      width:40px; height:40px; border-radius:50%; overflow:hidden; flex-shrink:0;
+      background:#f5f5f5;
+    }
+    .school-logo-img { width:100%; height:100%; object-fit:cover }
+    .school-divider { width:2px; height:40px; background:#ddd; margin:0 12px }
+    .school-info { display:flex; align-items:center; flex:1 }
+    .school-name { font-weight:bold; margin-right:4px }
+    .distance-divider { width:2px; height:30px; background:#ccc; margin:0 4px }
+    .school-distance.near { color:green }
+    .school-distance.far { color:#d32f2f }
+
+    /* ------------ footer ------------ */
+    footer {
+      position:fixed;
+      bottom:0;
+      left:0;
+      width:100%;
+      z-index:10;
+      background:#d32f2f;
+      display:flex;
+      justify-content:space-around;
+      align-items:center;
+      padding:.75rem 0;
+    }
+    .footer-icon, .center-logo {
+      width:60px; height:60px; border-radius:50%;
+      background:#fff; display:flex; justify-content:center; align-items:center;
+      overflow:hidden;
+    }
+    .icon-img { width:60px; height:90px; object-fit:cover }
+
+    /* ------------ modals ------------ */
+    .modal {
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.6);
+      display:none; align-items:center; justify-content:center;
+      transition:opacity .3s; opacity:0; z-index:100;
+    }
+    .modal.show { display:flex; opacity:1 }
+
+    .modal-content {
+      position:relative;
+      background:#fff; width:90%; max-width:400px;
+      border-radius:1rem; padding:2rem;
+      box-shadow:0 0 15px rgba(0,0,0,.2);
+      text-align:center;
+    }
+    .modal-content h2 { margin-bottom:1rem; font-size:1.5rem; }
+    .modal-content p { margin-bottom:1.5rem }
+    .modal-content .close-x {
+      position:absolute; top:.5rem; right:.7rem;
+      font-size:1.2rem; cursor:pointer; color:#666;
+    }
+    .modal-content label {
+      display:block; text-align:left; margin-top:1rem;
+      font-size:.9rem;
+    }
+    .modal-content select,
+    .modal-content button {
+      width:100%; padding:.8rem; margin-top:.5rem; font-size:1rem;
+      border-radius:8px; border:1px solid #ccc;
+    }
+    .modal-content button { background:#d32f2f; color:#fff; border:none; transition:background .2s; }
+    .modal-content button:hover { background:#6b1111 }
+    .modal-content select:disabled { background:#f5f5f5 }
+
+    /* ------------ advanced-search modal ------------ */
+    #filterModal .modal-content {
+      border:2px solid #d32f2f; text-align:left;
+      padding:1.5rem 1.5rem 2.5rem;
+    }
+
+    /* Add red border to initial and manual modals */
+    #initialModal .modal-content, #manualModal .modal-content {
+      border: 2px solid #d32f2f(76, 0, 255) !important;
+    }
+    #filterModal h2 {
+      text-align:center; margin-bottom:1.5rem;
+      font-size:1.5rem; color:#d32f2f;
+    }
+    .select-box {
+      border:2px solid #888; border-radius:8px;
+      padding:.75rem 1rem; margin-top:1rem;
+      display:flex; justify-content:space-between;
+      align-items:center; cursor:pointer;
+      user-select:none;
+    }
+    .select-box .arrow {
+      transition:transform .2s ease;
+      font-size:1.2rem;
+    }
+    .options {
+      border:2px solid #888; border-radius:8px;
+      margin-top:.25rem; display:none;
+      max-height:150px; overflow-y:auto;
+    }
+    .option { padding:.6rem 1rem; cursor:pointer; font-size:1rem; }
+    .option:hover { background:rgba(0,0,0,.05) }
+    #searchBtn {
+      width:100%; margin-top:1.5rem;
+      background:#d32f2f; color:#fff;
+      border:none; padding:.8rem; font-size:1.1rem;
+      border-radius:8px;
+    }
+
+    /* done modal */
+    #doneModal .modal-content { padding:2rem; font-size:1.5rem; }
+
+    .spinner {
+      /* hidden by default outside overlay */
+      display: none;
+      width: 40px; height: 40px;
+      border: 4px solid #f5f5f5;
+      border-top-color: #d32f2f;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 1rem auto;
+    }
+    /* overlay spinner override */
+    .loading-overlay .spinner {
+      display: block;
+      width: 80px; height: 80px;
+      border: 6px solid #f5f5f5;
+      border-top-color: #d32f2f;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-overlay {
+      position: fixed; inset:0;
+      background: rgba(0,0,0,0.6);
+      display: none; align-items:center; justify-content:center;
+      z-index:200;
+    }
+    .loading-overlay.show { display:flex; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- INITIAL LOCATION POPUP -->
+    <div class="modal" id="initialModal">
+      <div class="modal-content">
+        <span class="close-x" onclick="cancelInitial()">✕</span>
+        <h2>Set Your Location</h2>
+        <p>Try automatic detection or enter manually?</p>
+        <button id="retryBtn" onclick="retryGeolocation()">Retry Locating</button>
+        <div id="retrySpinner" class="spinner"></div>
+        <button onclick="openManualModal()">Manual Selection</button>
+      </div>
+    </div>
+
+    <!-- MANUAL SELECTION -->
+    <div class="modal" id="manualModal">
+      <div class="modal-content">
+        <h2>Manual Location Selection</h2>
+        <label for="region">Region</label>
+        <select id="region"><option value="">Select Region</option></select>
+        <label for="province">Province</label>
+        <select id="province" disabled><option value="">Select Province</option></select>
+        <label for="city">City/Municipality</label>
+        <select id="city" disabled><option value="">Select City/Municipality</option></select>
+        <label for="barangay">Barangay</label>
+        <select id="barangay" disabled><option value="">Select Barangay</option></select>
+        <button onclick="confirmManual()">Confirm</button>
+      </div>
+    </div>
+
+    <!-- ADVANCED SEARCH -->
+    <div class="modal" id="filterModal">
+      <div class="modal-content">
+        <span class="close-x" onclick="hideFilterModal()">✕</span>
+        <h2>Advanced Search</h2>
+        <div class="select-box" data-type="classification"><span class="label">School Classification</span><span class="arrow">▼</span></div>
+        <div class="options" data-type="classification">
+          <div class="option" data-value="All">All</div>
+          <div class="option" data-value="Private School">Private School</div>
+          <div class="option" data-value="Public School">Public School</div>
+        </div>
+        <div class="select-box" data-type="affiliation"><span class="label">School Affiliation</span><span class="arrow">▼</span></div>
+        <div class="options" data-type="affiliation">
+          <div class="option" data-value="All">All</div>
+          <div class="option" data-value="Sectarian">Sectarian</div>
+          <div class="option" data-value="Non-Sectarian">Non-Sectarian</div>
+        </div>
+        <div class="select-box" data-type="level"><span class="label">Level of Education</span><span class="arrow">▼</span></div>
+        <div class="options" data-type="level">
+          <div class="option" data-value="All">All</div>
+          <div class="option" data-value="Nursery">Nursery</div>
+          <div class="option" data-value="Kindergarten">Kindergarten</div>
+          <div class="option" data-value="Grade School">Grade School</div>
+          <div class="option" data-value="Junior High School">Junior High School</div>
+          <div class="option" data-value="Senior High School">Senior High School</div>
+          <div class="option" data-value="College">College</div>
+          <div class="option" data-value="Graduate School">Graduate School</div>
+        </div>
+        <button id="searchBtn">Search</button>
+      </div>
+    </div>
+
+    <!-- DONE POPOVER -->
+    <div class="modal" id="doneModal">
+      <div class="modal-content"><h2>Done!</h2></div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+      <div class="top-bar">
+        <div class="location-group">
+          <div class="location-text">Your Location</div>
+          <div class="user-location" id="user-location">Fetching location…</div>
+          <button id="retryHeaderBtn" onclick="showInitialModal()">Retry</button>
+        </div>
+        <button class="filter-btn" onclick="showFilterModal()">Filter</button>
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search School Here…" />
+        <button>🔍</button>
+      </div>
+    </header>
+
+    <!-- CONTENT LIST -->
+    <div class="scroll-section">
+      <div class="tab-section">
+        <div class="tab-title">Favorite</div>
+        <a class="school-tab" href="CUBED.html">
+          <div class="school-logo"><img class="school-logo-img" src="https://i.postimg.cc/C5NJb8sW/CUBED.jpg" alt="CUBED"/></div>
+          <div class="school-divider"></div>
+          <div class="school-info"><div class="school-name">CUBED</div><div class="distance-divider"></div><div class="school-distance near">1.2 km away</div></div>
+        </a>
+      </div>
+      <div class="tab-section">
+        <div class="tab-title">Schools Around Your Area</div>
+        <a class="school-tab" href="https://example.com" target="_blank" rel="noopener">
+          <div class="school-logo"><img class="school-logo-img" src="https://i.postimg.cc/PqXD87Rr/Other-School.png" alt="XU ACD"/></div>
+          <div class="school-divider"></div>
+          <div class="school-info"><div class="school-name">Xavier University Ateneo De Cagayan</div><div class="distance-divider"></div><div class="school-distance far">7.0 km away</div></div>
+        </a>
+        <a class="school-tab" href="https://example.com" target="_blank" rel="noopener">
+          <div class="school-logo"><img class="school-logo-img" src="USTPLogo.JPG" alt="USTP"/></div>
+          <div class="school-divider"></div>
+          <div class="school-info"><div class="school-name">University of Science and Technology (USTP)</div><div class="distance-divider"></div><div class="school-distance far">6.2 km away</div></div>
+        </a>
+        <a class="school-tab" href="https://example.com" target="_blank" rel="noopener">
+          <div class="school-logo"><img class="school-logo-img" src="liceo.PNG" alt="Liceo"/></div>
+          <div class="school-divider"></div>
+          <div class="school-info"><div class="school-name">Liceo University De Cagayan</div><div class="distance-divider"></div><div class="school-distance far">8.8 km away</div></div>
+        </a>
+        <a class="school-tab" href="https://example.com" target="_blank" rel="noopener">
+          <div class="school-logo"><img class="school-logo-img" src="Mark.png" alt="???"/></div>
+          <div class="school-divider"></div>
+          <div class="school-info"><div class="school-name">Unknown_School</div><div class="distance-divider"></div><div class="school-distance far">??? km away</div></div>
+        </a>
+        <a class="school-tab" href="https://example.com" target="_blank" rel="noopener">
+          <div class="school-logo"><img class="school-logo-img" src="Mark.png" alt="???"/></div>
+          <div class="school-divider"></div>
+          <div class="school-info"><div class="school-name">Unknown_School</div><div class="distance-divider"></div><div class="school-distance far">??? km away</div></div>
+        </a>
+        <a class="school-tab" href="https://example.com" target="_blank" rel="noopener">
+          <div class="school-logo"><img class="school-logo-img" src="Mark.png" alt="???"/></div>
+          <div class="school-divider"></div>
+          <div class="school-info"><div class="school-name">Unknown_School</div><div class="distance-divider"></div><div class="school-distance far">??? km away</div></div>
+        </a>
+        <a class="school-tab" href="https://example.com" target="_blank" rel="noopener">
+          <div class="school-logo"><img class="school-logo-img" src="Mark.png" alt="???"/></div>
+          <div class="school-divider"></div>
+          <div class="school-info"><div class="school-name">Unknown_School</div><div class="distance-divider"></div><div class="school-distance far">??? km away</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-icon" onclick="alert('Map clicked')"><img class="icon-img" src="Map.png" alt="Map"></div>
+      <div class="center-logo" onclick="alert('Center clicked')"><img class="icon-img" src="Center.png" alt="Center"></div>
+      <div class="footer-icon" onclick="alert('Menu clicked')"><img class="icon-img" src="Menu.png" alt="Menu"></div>
+    </footer>
+  </div>
+  <div id="loadingOverlay" class="loading-overlay"><div class="spinner"></div></div>
+  <script>
+    // ==== Utilities ==== 
+    function cancelInitial() { hideInitialModal(); }
+
+    function updateLocationText(txt){ document.getElementById('user-location').textContent = txt; }
+    // ==== Modal Controls ====
+    function showModal(id){ const m=document.getElementById(id); m.style.display='flex'; m.classList.add('show'); }
+    function hideModal(id){ const m=document.getElementById(id); m.classList.remove('show'); setTimeout(()=>m.style.display='none',300); }
+    function showInitialModal(){ showModal('initialModal'); }
+    function hideInitialModal(){ hideModal('initialModal'); document.getElementById('retryHeaderBtn').style.display='inline-block'; }
+    function openManualModal(){ updateLocationText('Manually Selecting Location…'); hideInitialModal(); showModal('manualModal'); if(!locationsData) loadLocations(); }
+    function hideManualModal(){ hideModal('manualModal'); }
+    function showFilterModal(){ showModal('filterModal'); }
+    function hideFilterModal(){ hideModal('filterModal'); }
+
+    // ==== Geolocation ====
+    const geoOptions={enableHighAccuracy:true, timeout:10000, maximumAge:0};
+    let popupTimer=null, locationsData=null;
+    function geoSuccess(pos){
+      // hide retry button when location found
+      const retryBtn = document.getElementById('retryHeaderBtn');
+      if (retryBtn) retryBtn.style.display = 'none'; clearTimeout(popupTimer); fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`)
+      .then(r=>r.json()).then(d=>{
+        const city=d.address.city||d.address.town||d.address.village||d.address.state||'Unknown';
+        const country=d.address.country?`, ${d.address.country}`:'';
+        updateLocationText(city+country);
+      }); }
+    function geoError(err){ console.error(err); updateLocationText('Auto detect failed. Please select manually.'); }
+    function attemptGeolocation(){ if(navigator.geolocation){ navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);} else showInitialModal(); popupTimer=setTimeout(showInitialModal,4500); loadLocations(); }
+    function retryGeolocation() {
+      // Show full-screen loading overlay ahead of all modals
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.classList.add('show');
+      // Attempt geolocation
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          // On success: hide overlay + modal
+          overlay.classList.remove('show');
+          hideInitialModal();
+          geoSuccess(pos);
+        },
+        err => {
+          console.error('Retry error:', err);
+          // After 4.5s, hide overlay but keep modal open
+          setTimeout(() => {
+            overlay.classList.remove('show');
+          }, 4500);
+        },
+        geoOptions
+      );
+    }
+
+    // ==== Manual Location ====
+    async function loadLocations(){ try{
+      const res=await fetch('ph-locations.json'); locationsData=await res.json();
+      const [regEl,provEl,cityEl,brgyEl]=['region','province','city','barangay'].map(id=>document.getElementById(id));
+      Object.entries(locationsData).forEach(([code,obj])=>regEl.add(new Option(obj.region_name,code)));
+      regEl.onchange=()=>{provEl.innerHTML='<option value="">Select Province</option>'; cityEl.innerHTML='<option value="">Select City/Municipality</option>'; brgyEl.innerHTML='<option value="">Select Barangay</option>'; provEl.disabled=false; cityEl.disabled=brgyEl.disabled=true; Object.keys(locationsData[regEl.value].province_list).forEach(n=>provEl.add(new Option(n,n)));};
+      provEl.onchange=()=>{ cityEl.innerHTML='<option value="">Select City/Municipality</option>'; brgyEl.innerHTML='<option value="">Select Barangay</option>'; cityEl.disabled=false; brgyEl.disabled=true; Object.keys(locationsData[regEl.value].province_list[provEl.value].municipality_list).forEach(n=>cityEl.add(new Option(n,n))); };
+      cityEl.onchange=()=>{ brgyEl.innerHTML='<option value="">Select Barangay</option>'; brgyEl.disabled=false; locationsData[regEl.value].province_list[provEl.value].municipality_list[cityEl.value].barangay_list.forEach(n=>brgyEl.add(new Option(n,n))); };
+    }catch(e){ console.error(e);} }
+    function confirmManual() {
+      const r = document.getElementById('region').value;
+      const p = document.getElementById('province').value;
+      const c = document.getElementById('city').value;
+      const b = document.getElementById('barangay').value;
+      if (!r || !p || !c || !b) return alert('Please fill all fields.');
+      const regionName = locationsData[r].region_name;
+      updateLocationText(`${b}, ${c}, ${p}, ${regionName}`);
+      // hide retry button after manual selection
+      const retryBtn = document.getElementById('retryHeaderBtn');
+      if (retryBtn) retryBtn.style.display = 'none';
+      hideManualModal();
+    }
+
+    // ==== Advanced Search UI ====
+    document.addEventListener('DOMContentLoaded',()=>{
+      // Attempt geolocation + preload
+      attemptGeolocation();
+      // Select-box toggles
+      document.querySelectorAll('.select-box').forEach(box=>{
+        box.onclick=()=>{
+          const type=box.dataset.type;
+          const opts=document.querySelector(`.options[data-type="${type}"]`);
+          opts.style.display=opts.style.display==='block'?'none':'block';
+          box.querySelector('.arrow').style.transform=opts.style.display==='block'?'rotate(180deg)':'rotate(0deg)';
+        };
+      });
+      document.querySelectorAll('.option').forEach(opt=>{
+        opt.onclick=()=>{
+          const type=opt.parentElement.dataset.type;
+          document.querySelector(`.select-box[data-type="${type}"] .label`).textContent=opt.dataset.value;
+          const opts=opt.parentElement; opts.style.display='none'; opts.previousElementSibling.querySelector('.arrow').style.transform='rotate(0deg)';
+        };
+      });
+      document.getElementById('searchBtn').onclick=()=>{ hideFilterModal(); showModal('doneModal'); setTimeout(()=>hideModal('doneModal'),1000); };
+    });
+  </script>
+</body>
+</html>
